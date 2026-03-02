@@ -1,5 +1,5 @@
 {
-  "name": "openalex-sdk",
+  "name": "@accelome/openalex-sdk",
   "version": "0.1.0",
   "description": "Typed TypeScript SDK for the OpenAlex API — Works, Authors, and Institutions",
   "type": "module",
