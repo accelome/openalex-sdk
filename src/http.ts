@@ -5,22 +5,26 @@ import {
   NotFoundError,
   RateLimitError,
 } from "./errors.js";
+import { shortenIds } from "./ids.js";
 
 export interface HttpClientConfig {
   baseUrl: string;
   apiKey?: string;
   userAgent?: string;
+  shortIds?: boolean;
 }
 
 export class HttpClient {
   private readonly baseUrl: string;
   private readonly apiKey?: string;
   private readonly userAgent?: string;
+  private readonly shortIds: boolean;
 
   constructor(config: HttpClientConfig) {
     this.baseUrl = config.baseUrl.replace(/\/+$/, "");
     this.apiKey = config.apiKey;
     this.userAgent = config.userAgent;
+    this.shortIds = config.shortIds ?? false;
   }
 
   async get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
@@ -42,7 +46,8 @@ export class HttpClient {
       await this.handleErrorResponse(response, url);
     }
 
-    return (await response.json()) as T;
+    const data = (await response.json()) as T;
+    return this.shortIds ? shortenIds(data) : data;
   }
 
   private buildUrl(path: string, params?: Record<string, unknown>): string {

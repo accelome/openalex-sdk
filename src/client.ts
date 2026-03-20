@@ -10,6 +10,8 @@ export interface OpenAlexConfig {
   baseUrl?: string;
   /** User-Agent / email for polite pool identification */
   userAgent?: string;
+  /** Strip URL prefixes from IDs (e.g. "https://openalex.org/W123" → "W123"). Default: false */
+  shortIds?: boolean;
 }
 
 export class OpenAlexClient {
@@ -22,6 +24,7 @@ export class OpenAlexClient {
       baseUrl: config.baseUrl ?? "https://api.openalex.org",
       apiKey: config.apiKey,
       userAgent: config.userAgent,
+      shortIds: config.shortIds,
     });
 
     this.works = new WorksEndpoint(http);

@@ -7,11 +7,11 @@ Built for [Bun](https://bun.sh).
 ## Quick start
 
 ```bash
-bun install
+bun add @accelome/openalex-sdk
 ```
 
 ```ts
-import { OpenAlexClient } from "./src/index.ts";
+import { OpenAlexClient } from "@accelome/openalex-sdk";
 
 const client = new OpenAlexClient({ apiKey: "your-api-key" });
 
@@ -166,7 +166,7 @@ Available sort fields: `works_count`, `cited_by_count`, `summary_stats.h_index`,
 All API errors throw typed error classes that extend `OpenAlexError`:
 
 ```ts
-import { NotFoundError, RateLimitError, ValidationError } from "./src/index.ts";
+import { NotFoundError, RateLimitError, ValidationError } from "@accelome/openalex-sdk";
 
 try {
   await client.works.get("W0000000000");

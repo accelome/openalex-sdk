@@ -64,6 +64,9 @@ export type {
   InstitutionsSortField,
 } from "./types/params.js";
 
+// ID utilities
+export { extractId, shortenIds } from "./ids.js";
+
 // Error classes (value exports for instanceof checks)
 export {
   OpenAlexError,

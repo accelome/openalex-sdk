@@ -157,4 +157,28 @@ describe("WorksEndpoint", () => {
       expect(response.results).toHaveLength(1);
     });
   });
+
+  describe("shortIds", () => {
+    test("strips URL prefixes when shortIds is enabled", async () => {
+      const shortClient = new OpenAlexClient({ apiKey: "test-key", shortIds: true });
+
+      mockFetch(() =>
+        Promise.resolve(new Response(JSON.stringify(mockWork), { status: 200 })),
+      );
+
+      const work = await shortClient.works.get("W2741809807");
+      expect(work.id).toBe("W2741809807");
+      expect(work.doi).toBe("10.7717/peerj.4375");
+    });
+
+    test("leaves URLs intact when shortIds is disabled", async () => {
+      mockFetch(() =>
+        Promise.resolve(new Response(JSON.stringify(mockWork), { status: 200 })),
+      );
+
+      const work = await client.works.get("W2741809807");
+      expect(work.id).toBe("https://openalex.org/W2741809807");
+      expect(work.doi).toBe("https://doi.org/10.7717/peerj.4375");
+    });
+  });
 });
