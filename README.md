@@ -37,7 +37,33 @@ const client = new OpenAlexClient({
   apiKey: "your-api-key",       // optional, required for list endpoints
   baseUrl: "https://api.openalex.org", // optional, default shown
   userAgent: "you@example.com", // optional, recommended by OpenAlex for polite pool
+  shortIds: true,               // optional, strip URL prefixes from all IDs
 });
+```
+
+### Short IDs
+
+By default, OpenAlex returns IDs as full URLs (e.g. `https://openalex.org/W4400948944`). Set `shortIds: true` to automatically strip URL prefixes from all IDs in every response:
+
+```ts
+const client = new OpenAlexClient({ apiKey: "...", shortIds: true });
+
+const work = await client.works.get("W4400948944");
+// work.id === "W4400948944"           (not "https://openalex.org/W4400948944")
+// work.doi === "10.1038/s41586-..."   (not "https://doi.org/10.1038/s41586-...")
+// work.authorships[0].author.orcid === "0000-0003-..."
+```
+
+This applies recursively to every field — `id`, `ids.*`, `lineage[]`, `authorships`, nested institutions, etc.
+
+You can also use the `extractId` utility directly:
+
+```ts
+import { extractId } from "@accelome/openalex-sdk";
+
+extractId("https://openalex.org/W4400948944"); // "W4400948944"
+extractId("https://ror.org/0161xgx34");        // "0161xgx34"
+extractId("W4400948944");                       // "W4400948944" (unchanged)
 ```
 
 ---
@@ -216,6 +242,7 @@ src/
   http.ts            # Fetch wrapper, URL building, error mapping
   errors.ts          # Error class hierarchy
   validation.ts      # Input validation
+  ids.ts             # ID extraction and shortening utilities
   types/             # TypeScript interfaces for all entities and params
   endpoints/         # Works, Authors, Institutions sub-clients
 tests/               # Unit tests (bun:test)
